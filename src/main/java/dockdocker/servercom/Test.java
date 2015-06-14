@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
  */
 public class Test {
     
+    private String password = "HdC883";
+    
     public Test(){
         
     }
@@ -27,6 +29,8 @@ public class Test {
     try{
       JSch jsch=new JSch();  
  
+      String password = "HdC883";
+      
       String host=null;
       if(arg.length>0){
         host=arg[0];
@@ -54,11 +58,11 @@ public class Test {
       session.setConfig("StrictHostKeyChecking", "no");
       session.connect();
  
-      String command= "echo \"test is een succes\"";
-      command = "sudo -S -p HdC883 docker ps"; 
+      String command= "docker ps";
+      //command = "sudo -S -p 'HdC883' docker ps"; 
  
       Channel channel=session.openChannel("exec");
-      ((ChannelExec)channel).setCommand(command);
+      ((ChannelExec)channel).setCommand("echo " + password + " | sudo -S "  + command);
  
       // X Forwarding
       // channel.setXForwarding(true);

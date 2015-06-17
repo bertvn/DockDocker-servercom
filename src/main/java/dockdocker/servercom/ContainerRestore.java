@@ -5,10 +5,13 @@
  */
 package dockdocker.servercom;
 
+import dockdocker.servercom.interfaces.IContainerRestore;
+import dockdocker.servercom.interfaces.ISSHHandler;
+
 /**
  *
  * @author Bert
  */
-public class ContainerRestore {
-    
+public class ContainerRestore implements IContainerRestore{
+    public ContainerRestore(ISSHHandler han){}
 }

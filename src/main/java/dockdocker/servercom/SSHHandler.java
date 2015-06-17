@@ -5,6 +5,7 @@
  */
 package dockdocker.servercom;
 
+import dockdocker.servercom.interfaces.ISSHHandler;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;

@@ -5,10 +5,16 @@
  */
 package dockdocker.servercom;
 
+import dockdocker.servercom.interfaces.ISSHHandler;
+import dockdocker.servercom.interfaces.IVolumeBackup;
+
 /**
  *
  * @author Bert
  */
-public class VolumeBackup {
+public class VolumeBackup implements IVolumeBackup{
     
+    public VolumeBackup(ISSHHandler han){
+    
+    }
 }

@@ -5,6 +5,9 @@
  */
 package dockdocker.servercom;
 
+import dockdocker.servercom.interfaces.IContainerBackup;
+import dockdocker.servercom.interfaces.ISSHHandler;
+
 /**
  *
  * @author Bert

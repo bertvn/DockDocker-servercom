@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dockdocker.servercom;
+package dockdocker.servercom.interfaces;
 
 /**
  *
  * @author Bert
  */
-public interface ISSHHandler {
-    String runCommand(String command);
+public interface IVolumeBackup {
+    
 }

@@ -5,10 +5,13 @@
  */
 package dockdocker.servercom;
 
+import dockdocker.servercom.interfaces.ISSHHandler;
+import dockdocker.servercom.interfaces.IVolumeRestore;
+
 /**
  *
  * @author Bert
  */
-public class VolumeRestore {
-    
+public class VolumeRestore implements IVolumeRestore{
+    public VolumeRestore(ISSHHandler han){}
 }

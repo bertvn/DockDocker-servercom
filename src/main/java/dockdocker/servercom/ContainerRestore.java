@@ -12,15 +12,34 @@ import dockdocker.servercom.interfaces.ISSHHandler;
  *
  * @author Bert
  */
-public class ContainerRestore implements IContainerRestore{
-    public ContainerRestore(ISSHHandler han){}
-    
+public class ContainerRestore implements IContainerRestore {
+
+    private ISSHHandler han;
+    private String defaultLoc = "tempDock";
+
+    public ContainerRestore(ISSHHandler han) {
+        this.han = han;
+    }
+
     /**
      * restores a container
+     *
      * @param containerName name of the container
-     * @return json string with key message and either success of failure as value
+     * @return json string with key message and either success of failure as
+     * value
      */
-    public String restoreContainer(String containerName){
-        return null;
+    public String restoreContainer(String containerName) {
+        han.runCommand("docker load < " + defaultLoc + "/" + containerName + ".tar");
+        han.runCommand("docker run " + containerName);
+        
+        String status = han.runCommand("docker ps -l"); 
+        
+        //regex NAMES\n([0-9A-Za-z]*) $1
+        String containerID = status.replaceAll("NAMES\n([0-9A-Za-z]*)", "$1");
+        if(containerID.equals("")){
+            return "{message: \"failure\"}";
+        }
+        han.runCommand("docker start " + containerID);
+        return containerID;
     }
 }

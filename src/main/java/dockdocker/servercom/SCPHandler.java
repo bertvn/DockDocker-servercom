@@ -28,7 +28,7 @@ public class SCPHandler implements ISCPHandler{
      * @return result of the command
      */
     public String transferFile(String filename, String targetServer, String targetPassword){
-        String defaultpath = "";
+        String defaultpath = "tempDock/";
         String result = han.runCommand("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath);
         
         return result;

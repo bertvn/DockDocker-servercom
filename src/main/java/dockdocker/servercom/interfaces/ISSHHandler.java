@@ -11,4 +11,6 @@ package dockdocker.servercom.interfaces;
  */
 public interface ISSHHandler {
     String runCommand(String command);
+    String getLogin();
+    String getPassword();
 }

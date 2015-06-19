@@ -12,34 +12,46 @@ import dockdocker.servercom.interfaces.IServer;
  *
  * @author Bert
  */
-public class MoveContainer implements IMoveContainer{
+public class MoveContainer implements IMoveContainer {
+
     private IServer sender;
     private IServer receiver;
-    
-    public MoveContainer(IServer server1, IServer server2){
+
+    public MoveContainer(IServer server1, IServer server2) {
         this.sender = server1;
         this.receiver = server2;
     }
-    
+
     /**
      * transfers container from server sender to server receiver
+     *
      * @param container name of container
      * @return String indicating where it went wrong
      */
-    public String transferContainer(String container){
+    public String transferContainer(String container) {
         boolean hasVolume = true;
         String volume = sender.getSSH().runCommand("docker inspect -f {{.Config.Volumes}} " + container);
-        if(volume.equals("<no value>")){
+        if (volume.equals("<no value>")) {
             hasVolume = false;
         }
+        String backup = sender.getContainerBackup().backupContainer(container);
+        //if backup !== failure
+        String scp = sender.getSCP().transferFile(container + ".tar", receiver.getSSH().getLogin(), receiver.getSSH().getPassword());
+        //if scp !== failure
         
+        String restore = receiver.getContainerRestore().restoreContainer(container);
+        //if restore !== failure
         
-        return null;
+        if (hasVolume == false) {
+            return restore;
+        }
+
+        transferVolume(container, restore);
+        return restore;
+    }
+
+    private void transferVolume(String container, String newContainer) {
         
     }
-    
-    private void transferVolume(String container){
-        
-    }
-    
+
 }

@@ -34,7 +34,11 @@ public class ContainerBackup implements IContainerBackup{
             han.runCommand("mkdir " + defaultLoc);
         }
         
-        String result = han.runCommand("docker save -o " + defaultLoc + "/" + containerName + ".tar " + imageID);
+        han.runCommand("rm -f " + defaultLoc + "/" + containerName + ".tar");
+        String containerID = han.runCommand("docker inspect -f {{.Id}} " + containerName);
+        han.runCommand("docker commit " + containerID + " " + containerName);
+        
+        String result = han.runCommand("docker save " + containerName + " > " + defaultLoc + "/" + containerName + ".tar");
         
         if(result.equals("")){
             return "{message: \"success\"}";

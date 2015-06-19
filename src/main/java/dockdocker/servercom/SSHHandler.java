@@ -11,6 +11,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
@@ -18,7 +19,7 @@ import java.io.InputStream;
  */
 public class SSHHandler implements ISSHHandler{
 
-    private final String password;
+    private String password;
     private JSch ssh = new JSch();
 
     private final String user;
@@ -44,8 +45,17 @@ public class SSHHandler implements ISSHHandler{
             session.connect();
             
             Channel channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand("echo " + password + " | sudo -S " + command);
+            //((ChannelExec) channel).setCommand("echo " + password + " | sudo -S " + command);
+            
+            ((ChannelExec) channel).setCommand("sudo -S -p ''" + command);
 
+            OutputStream out = channel.getOutputStream();
+
+            channel.connect();
+
+            out.write((password + "\n").getBytes());
+            out.flush();
+            
             // X Forwarding
             // channel.setXForwarding(true);
             //channel.setInputStream(System.in);
@@ -91,6 +101,21 @@ public class SSHHandler implements ISSHHandler{
             return null;
         }
         return result.toString();
+    }
+    
+    /**
+     * runs command and allows for another password to be entered.
+     * used for SCP
+     * @param command command you want to run
+     * @param extraPassword password for SCP
+     * @return server output
+     */
+    public String runCommandExtraPassword(String command, String extraPassword){
+        String temp = password;
+        password = password + "\n" + extraPassword;
+        String result = runCommand(command);
+        password = temp;
+        return result;
     }
     
     public String getLogin(){

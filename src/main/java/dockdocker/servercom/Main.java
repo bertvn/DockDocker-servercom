@@ -27,20 +27,22 @@ public class Main {
         get("/ssh/:command/:server", (request, response) -> {
             ILoginDataRetriever loginData = new LoginDataRetriever();
             try {
-                String[] login = loginData.getServerLogin(request.params(":server1"));
+                String[] login = loginData.getServerLogin(request.params(":server"));
+                System.out.println(login[0] + "@" + login[1] + " : " + login[2]);
                 ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
                 return han1.runCommand(request.params(":command"));
             } catch (Exception e) {
                 //log exception
+                System.out.println(e.toString());
                 response.status(404);
                 return response;
             }
         });
 
-        get("/backup/:name/:server1", (request, response) -> {
+        get("/backup/:name/:server", (request, response) -> {
             ILoginDataRetriever loginData = new LoginDataRetriever();
             try {
-                String[] login = loginData.getServerLogin(request.params(":server1"));
+                String[] login = loginData.getServerLogin(request.params(":server"));
                 ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
                 IContainerBackup cb = new ContainerBackup(han1);
                 return cb.backupContainer(request.params(":name"));

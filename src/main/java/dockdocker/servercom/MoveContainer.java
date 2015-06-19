@@ -21,7 +21,12 @@ public class MoveContainer implements IMoveContainer{
         this.receiver = server2;
     }
     
-    public void transferContainer(String container){
+    /**
+     * transfers container from server sender to server receiver
+     * @param container name of container
+     * @return String indicating where it went wrong
+     */
+    public String transferContainer(String container){
         boolean hasVolume = true;
         String volume = sender.getSSH().runCommand("docker inspect -f {{.Config.Volumes}} " + container);
         if(volume.equals("<no value>")){
@@ -29,6 +34,7 @@ public class MoveContainer implements IMoveContainer{
         }
         
         
+        return null;
         
     }
     

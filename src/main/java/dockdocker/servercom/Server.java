@@ -37,26 +37,50 @@ public class Server implements IServer{
         this.vr = vr;
     }
     
+    /**
+     * returns ssh handler
+     * @return ssh handler
+     */
     public ISSHHandler getSSH(){
         return ssh;
     }
     
+    /**
+     * returns scp handler
+     * @return scp handler
+     */
     public ISCPHandler getSCP(){
         return scp;
     }
     
+    /**
+     * returns container backup class
+     * @return container backup
+     */
     public IContainerBackup getContainerBackup(){
         return cb;
     }
     
+    /**
+     * returns container restore class
+     * @return container restore
+     */
     public IContainerRestore getContainerRestore(){
         return cr;
     }
     
+    /**
+     * returns volume backup class
+     * @return volume backup
+     */
     public IVolumeBackup getVolumeBackup(){
         return vb;
     }
     
+    /**
+     * returns volume restore class
+     * @return volume restore
+     */
     public IVolumeRestore getVolumeRestore(){
         return vr;
     }

@@ -30,6 +30,11 @@ public class SSHHandler implements ISSHHandler{
         this.password = password;
     }
 
+    /**
+     * run a command on the server through ssh
+     * @param command command you want to run
+     * @return server output
+     */
     public String runCommand(String command) {
         StringBuilder result = new StringBuilder();
         try {
@@ -74,7 +79,7 @@ public class SSHHandler implements ISSHHandler{
                 }
                 try {
                     Thread.sleep(1000);
-                } catch (Exception ee) {
+                } catch (Exception e) {
                 }
             }
             channel.disconnect();
@@ -86,5 +91,13 @@ public class SSHHandler implements ISSHHandler{
             return null;
         }
         return result.toString();
+    }
+    
+    public String getLogin(){
+        return user + "@" + host;
+    }
+    
+    public String getPassword(){
+        return password;
     }
 }

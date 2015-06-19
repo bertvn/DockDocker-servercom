@@ -14,4 +14,13 @@ import dockdocker.servercom.interfaces.ISSHHandler;
  */
 public class ContainerRestore implements IContainerRestore{
     public ContainerRestore(ISSHHandler han){}
+    
+    /**
+     * restores a container
+     * @param containerName name of the container
+     * @return json string with key message and either success of failure as value
+     */
+    public String restoreContainer(String containerName){
+        return null;
+    }
 }

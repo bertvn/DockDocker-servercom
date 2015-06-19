@@ -6,6 +6,7 @@
 package dockdocker.servercom;
 
 import dockdocker.servercom.interfaces.IContainerBackup;
+import dockdocker.servercom.interfaces.ILoginDataRetriever;
 import dockdocker.servercom.interfaces.IMoveContainer;
 import dockdocker.servercom.interfaces.ISSHHandler;
 import dockdocker.servercom.interfaces.IServer;
@@ -22,24 +23,51 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ISSHHandler han1 = new SSHHandler("ubuntu-0861465@145.24.222.169", "HdC883");
-        ISSHHandler han2 = new SSHHandler("ubuntu-0861465@145.24.222.146", "64Bxx8");
-        
-        get("/ssh/:command", (request, response) -> {
-            return han1.runCommand(request.params(":command"));
+
+        get("/ssh/:command/:server", (request, response) -> {
+            ILoginDataRetriever loginData = new LoginDataRetriever();
+            try {
+                String[] login = loginData.getServerLogin(request.params(":server1"));
+                ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
+                return han1.runCommand(request.params(":command"));
+            } catch (Exception e) {
+                //log exception
+                response.status(404);
+                return response;
+            }
         });
-        
-        get("/backup/:name", (request, response) -> {
-            IContainerBackup cb = new ContainerBackup(han1);
-            return cb.backupContainer(request.params(":name"));
+
+        get("/backup/:name/:server1", (request, response) -> {
+            ILoginDataRetriever loginData = new LoginDataRetriever();
+            try {
+                String[] login = loginData.getServerLogin(request.params(":server1"));
+                ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
+                IContainerBackup cb = new ContainerBackup(han1);
+                return cb.backupContainer(request.params(":name"));
+            } catch (Exception e) {
+                //log exception
+                response.status(404);
+                return response;
+            }
         });
-        
+
         get("/move/:name/:server1/:server2", (request, response) -> {
-            IServer server1 = new Server(han1, new SCPHandler(han1), new ContainerBackup(han1), new VolumeBackup(han1));
-            IServer server2 = new Server(han2,new ContainerRestore(han2), new VolumeRestore(han2));
-            IMoveContainer mover = new MoveContainer(server1, server2);
-            return "dope shit man!";
+            ILoginDataRetriever loginData = new LoginDataRetriever();
+            try {
+                String[] login = loginData.getServerLogin(request.params(":server1"));
+                ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
+                login = loginData.getServerLogin(request.params(":server2"));
+                ISSHHandler han2 = new SSHHandler(login[0] + "@" + login[1], login[2]);
+                IServer server1 = new Server(han1, new SCPHandler(han1), new ContainerBackup(han1), new VolumeBackup(han1));
+                IServer server2 = new Server(han2, new ContainerRestore(han2), new VolumeRestore(han2));
+                IMoveContainer mover = new MoveContainer(server1, server2);
+                return "dope shit man!";
+            } catch (Exception e) {
+                //log exception
+                response.status(404);
+                return response;
+            }
         });
     }
-    
+
 }

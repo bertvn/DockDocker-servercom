@@ -20,11 +20,18 @@ public class SCPHandler implements ISCPHandler{
         this.han = han;
     }
     
-    public String transferFile(String filename, String targetServer){
+    /**
+     * transfers file
+     * @param filename name of the file
+     * @param targetServer user@ip of the server the file needs to go to
+     * @param targetPassword password of the user
+     * @return result of the command
+     */
+    public String transferFile(String filename, String targetServer, String targetPassword){
         String defaultpath = "";
         String result = han.runCommand("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath);
         
         return result;
     }
-    
+
 }

@@ -14,7 +14,6 @@ public interface IServer {
     
     public ISCPHandler getSCP();
     
-    
     public IContainerBackup getContainerBackup();
     
     public IContainerRestore getContainerRestore();

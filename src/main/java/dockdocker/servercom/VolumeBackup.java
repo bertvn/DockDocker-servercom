@@ -17,4 +17,18 @@ public class VolumeBackup implements IVolumeBackup{
     public VolumeBackup(ISSHHandler han){
     
     }
+    
+    /**
+     * backups a volume
+     * @param containerName name of the container of the volume
+     * @return json string with key message and either success of failure as value
+     */
+    public String backupVolume(String containerName){
+        String result = "";
+        if(result.equals("")){
+            return "{message: \"success\"}";
+        }else{
+            return "{message: \"failure\"}";
+        }
+    }
 }

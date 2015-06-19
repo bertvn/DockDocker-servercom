@@ -9,7 +9,6 @@ package dockdocker.servercom.interfaces;
  *
  * @author Bert
  */
-public interface ISCPHandler {
-
-    public String transferFile(String filename, String targetServer, String targetPassword);
+public interface ILoginDataRetriever {
+    public String[] getServerLogin(String servername) throws Exception;
 }

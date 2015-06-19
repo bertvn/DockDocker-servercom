@@ -14,4 +14,13 @@ import dockdocker.servercom.interfaces.IVolumeRestore;
  */
 public class VolumeRestore implements IVolumeRestore{
     public VolumeRestore(ISSHHandler han){}
+    
+    /**
+     * restores a volume
+     * @param containerName name of the container of the volume
+     * @return json string with key message and either success of failure as value
+     */
+    public String restoreVolume(String containerName){
+        return null;
+    }
 }

@@ -10,5 +10,5 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface IVolumeBackup {
-    
+    String backupVolume(String containerName);
 }

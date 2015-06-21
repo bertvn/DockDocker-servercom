@@ -17,7 +17,7 @@ public class ContainerBackup implements IContainerBackup{
     private String defaultLoc = "tempDock";
     
     public ContainerBackup(ISSHHandler han){
-        han = han;
+        this.han = han;
     }
     
     /**
@@ -26,19 +26,28 @@ public class ContainerBackup implements IContainerBackup{
      * @return json string with key message and either success of failure as value
      */
     public String backupContainer(String containerName){
+        /*
+        //todo remove
         String imageName = han.runCommand("docker inspect -f {{.Config.Image}} " + containerName);
+        System.out.println("imageName: " + imageName);
         String imageID = han.runCommand("docker inspect -f {{.Image}} " + containerName);
-        
+        System.out.println("imageID: " + imageID);
+        //end
+        */
+        //check if dir exist otherwise create it
+        System.out.println("checking if " + defaultLoc + "/ exist");
+        System.out.println(han);
+        System.out.println(han.getLogin() + " : " + han.getPassword());
         String dir = han.runCommand("ls " + defaultLoc);
         if(dir.equals("ls: cannot access " + defaultLoc + ": No such file or directory")){
             han.runCommand("mkdir " + defaultLoc);
         }
-        
+        System.out.println("writing to " + defaultLoc + "/");
         han.runCommand("rm -f " + defaultLoc + "/" + containerName + ".tar");
         String containerID = han.runCommand("docker inspect -f {{.Id}} " + containerName);
-        han.runCommand("docker commit " + containerID + " " + containerName);
+        han.runCommand("docker commit " + containerID + " " + containerName + "_img");
         
-        String result = han.runCommand("docker save " + containerName + " > " + defaultLoc + "/" + containerName + ".tar");
+        String result = han.runCommand("docker save " + containerName + "_img > " + defaultLoc + "/" + containerName + ".tar");
         
         if(result.equals("")){
             return "{message: \"success\"}";

@@ -29,17 +29,22 @@ public class ContainerRestore implements IContainerRestore {
      * value
      */
     public String restoreContainer(String containerName) {
+        String begin = han.runCommand("docker ps -l"); 
+        
+        //regex NAMES\n([0-9A-Za-z]*) $1
+        String oldID = begin.replaceAll(".*NAMES\n([0-9A-Za-z]*) .*", "$1");
+        
         han.runCommand("docker load < " + defaultLoc + "/" + containerName + ".tar");
         han.runCommand("docker run " + containerName);
         
         String status = han.runCommand("docker ps -l"); 
         
         //regex NAMES\n([0-9A-Za-z]*) $1
-        String containerID = status.replaceAll("NAMES\n([0-9A-Za-z]*)", "$1");
-        if(containerID.equals("")){
+        String containerID = status.replaceAll(".*NAMES\n([0-9A-Za-z]*) .*", "$1");
+        if(containerID.equals(oldID)){
             return "{message: \"failure\"}";
         }
         han.runCommand("docker start " + containerID);
-        return containerID;
+        return "{message: \"success\"}";
     }
 }

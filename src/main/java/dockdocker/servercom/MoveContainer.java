@@ -31,16 +31,25 @@ public class MoveContainer implements IMoveContainer {
     public String transferContainer(String container) {
         boolean hasVolume = true;
         String volume = sender.getSSH().runCommand("docker inspect -f {{.Config.Volumes}} " + container);
+        System.out.println(volume);
         if (volume.equals("<no value>")) {
             hasVolume = false;
         }
+        System.out.println("has volume:" + hasVolume);
         String backup = sender.getContainerBackup().backupContainer(container);
         //if backup !== failure
+        System.out.println("backup: ");
+        System.out.println(backup);
+        
         String scp = sender.getSCP().transferFile(container + ".tar", receiver.getSSH().getLogin(), receiver.getSSH().getPassword());
         //if scp !== failure
+        System.out.println("scp: ");
+        System.out.println(scp);
+        
         
         String restore = receiver.getContainerRestore().restoreContainer(container);
         //if restore !== failure
+        //System.out.println(scp);
         
         if (hasVolume == false) {
             return restore;

@@ -5,7 +5,6 @@
  */
 package dockdocker.servercom;
 
-import dockdocker.servercom.interfaces.ISSHHandler;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -17,15 +16,16 @@ import java.io.OutputStream;
  *
  * @author Bert
  */
-public class SSHHandler implements ISSHHandler {
+public class SCPSSH {
 
     private String password;
+    private String password2;
     private JSch ssh = new JSch();
 
     private final String user;
     private final String host;
 
-    public SSHHandler(String login, String password) {
+    public SCPSSH(String login, String password) {
         user = login.substring(0, login.indexOf('@'));
         host = login.substring(login.indexOf('@') + 1);
         this.password = password;
@@ -37,7 +37,6 @@ public class SSHHandler implements ISSHHandler {
      * @param command command you want to run
      * @return server output
      */
-    @Override
     public String runCommand(String command) {
         StringBuilder result = new StringBuilder();
         try {
@@ -51,17 +50,19 @@ public class SSHHandler implements ISSHHandler {
             //((ChannelExec) channel).setCommand("echo " + password + " | sudo -S " + command);
 
             System.out.println(command);
-            String completeCommand = "sudo -S -p '' " + command;
+            String completeCommand = command;
 
             ((ChannelExec) channel).setCommand(completeCommand);
 
             OutputStream out = channel.getOutputStream();
 
-            //((ChannelExec) channel).setPty(true);
+            ((ChannelExec) channel).setPty(true);
             channel.connect();
 
-            out.write((password + "\n").getBytes());
+            out.write(("yes\n" + password2 + "\n").getBytes());
             out.flush();
+            //out.write((password2 + "\n").getBytes());
+            //out.flush();
 
             // X Forwarding
             // channel.setXForwarding(true);
@@ -76,6 +77,8 @@ public class SSHHandler implements ISSHHandler {
             InputStream in = channel.getInputStream();
 
             channel.connect();
+            out.write((password2 + "\n").getBytes());
+            out.flush();
 
             byte[] tmp = new byte[1024];
             while (true) {
@@ -85,6 +88,7 @@ public class SSHHandler implements ISSHHandler {
                         break;
                     }
                     result.append(new String(tmp, 0, i));
+                    System.out.println(new String(tmp, 0, i));
                 }
                 if (channel.isClosed()) {
                     if (in.available() > 0) {
@@ -98,15 +102,17 @@ public class SSHHandler implements ISSHHandler {
                 } catch (Exception e) {
                 }
             }
+
+            channel.disconnect();
+            channel.connect();
+            out.write((password2 + "\n").getBytes());
+            out.flush();
             channel.disconnect();
             session.disconnect();
 
         } catch (Exception e) {
             System.out.print(e);
             return null;
-        }
-        if (result.length() > 1) {
-            result.setLength(result.length() - 1);
         }
         return result.toString();
     }
@@ -119,20 +125,20 @@ public class SSHHandler implements ISSHHandler {
      * @return server output
      */
     public String runCommandExtraPassword(String command, String extraPassword) {
-        String temp = password;
-        password = password + "\n" + extraPassword;
+        //String temp = password;
+        //password = password + "\n" + extraPassword;
+        password2 = extraPassword;
         String result = runCommand(command);
-        password = temp;
+        //password = temp;
         return result;
     }
 
-    @Override
     public String getLogin() {
         return user + "@" + host;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
+
 }

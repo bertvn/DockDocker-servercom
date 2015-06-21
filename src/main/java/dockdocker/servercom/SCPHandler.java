@@ -14,9 +14,9 @@ import dockdocker.servercom.interfaces.ISSHHandler;
  */
 public class SCPHandler implements ISCPHandler{
     
-    private ISSHHandler han;
+    private SCPSSH han;
     
-    public SCPHandler(ISSHHandler han){
+    public SCPHandler(SCPSSH han){
         this.han = han;
     }
     
@@ -29,8 +29,8 @@ public class SCPHandler implements ISCPHandler{
      */
     public String transferFile(String filename, String targetServer, String targetPassword){
         String defaultpath = "tempDock/";
-        String result = han.runCommand("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath);
-        
+        //String result = han.runCommand("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath);
+        String result = han.runCommandExtraPassword("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath,targetPassword);
         return result;
     }
 

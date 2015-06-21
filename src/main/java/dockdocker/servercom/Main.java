@@ -58,12 +58,14 @@ public class Main {
             try {
                 String[] login = loginData.getServerLogin(request.params(":server1"));
                 ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
+                SCPSSH scpssh = new SCPSSH(login[0] + "@" + login[1], login[2]);
                 login = loginData.getServerLogin(request.params(":server2"));
                 ISSHHandler han2 = new SSHHandler(login[0] + "@" + login[1], login[2]);
-                IServer server1 = new Server(han1, new SCPHandler(han1), new ContainerBackup(han1), new VolumeBackup(han1));
+                IServer server1 = new Server(han1, new SCPHandler(scpssh), new ContainerBackup(han1), new VolumeBackup(han1));
                 IServer server2 = new Server(han2, new ContainerRestore(han2), new VolumeRestore(han2));
                 IMoveContainer mover = new MoveContainer(server1, server2);
-                return "dope shit man!";
+                String result = mover.transferContainer(request.params(":name"));
+                return result;
             } catch (Exception e) {
                 //log exception
                 response.status(404);

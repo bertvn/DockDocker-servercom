@@ -12,25 +12,28 @@ import dockdocker.servercom.interfaces.ISSHHandler;
  *
  * @author Bert
  */
-public class SCPHandler implements ISCPHandler{
-    
+public class SCPHandler implements ISCPHandler {
+
     private SCPSSH han;
-    
-    public SCPHandler(SCPSSH han){
+
+    public SCPHandler(SCPSSH han) {
         this.han = han;
     }
-    
+
     /**
      * transfers file
+     *
      * @param filename name of the file
      * @param targetServer user@ip of the server the file needs to go to
      * @param targetPassword password of the user
      * @return result of the command
      */
-    public String transferFile(String filename, String targetServer, String targetPassword){
+    public String transferFile(String filename, String targetServer, String targetPassword) {
         String defaultpath = "tempDock/";
         //String result = han.runCommand("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath);
-        String result = han.runCommandExtraPassword("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath,targetPassword);
+        //String result = han.runCommandExtraPassword("scp " + defaultpath + filename + " " + targetServer + ":" + defaultpath,targetPassword);
+        String result = han.runCommandExtraPassword("tar cz " + defaultpath + filename + " | ssh ubuntu-0861465@145.24.222.169 \"cat > outfile.tar.gz\"", targetPassword);
+
         return result;
     }
 

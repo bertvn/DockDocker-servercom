@@ -34,6 +34,9 @@ public class ContainerRestore implements IContainerRestore {
         //regex NAMES\n([0-9A-Za-z]*) $1
         String oldID = begin.replaceAll(".*NAMES\n([0-9A-Za-z]*) .*", "$1");
         
+        han.runCommand("rm -f " + defaultLoc + "/*");
+        han.runCommand("tar xzf outfile.tar.gz");
+        
         han.runCommand("docker load < " + defaultLoc + "/" + containerName + ".tar");
         han.runCommand("docker run " + containerName);
         

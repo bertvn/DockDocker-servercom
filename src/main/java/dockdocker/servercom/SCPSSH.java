@@ -56,10 +56,10 @@ public class SCPSSH {
 
             OutputStream out = channel.getOutputStream();
 
-            ((ChannelExec) channel).setPty(true);
+            //((ChannelExec) channel).setPty(true);
             channel.connect();
 
-            out.write(("yes\n" + password2 + "\n").getBytes());
+            out.write((password2 + "\n").getBytes());
             out.flush();
             //out.write((password2 + "\n").getBytes());
             //out.flush();
@@ -77,8 +77,7 @@ public class SCPSSH {
             InputStream in = channel.getInputStream();
 
             channel.connect();
-            out.write((password2 + "\n").getBytes());
-            out.flush();
+            
 
             byte[] tmp = new byte[1024];
             while (true) {
@@ -103,10 +102,6 @@ public class SCPSSH {
                 }
             }
 
-            channel.disconnect();
-            channel.connect();
-            out.write((password2 + "\n").getBytes());
-            out.flush();
             channel.disconnect();
             session.disconnect();
 

@@ -60,7 +60,16 @@ public class MoveContainer implements IMoveContainer {
     }
 
     private void transferVolume(String container, String newContainer) {
-        
+        //remove output.tar.gz from receiver
+        //remove content of tempDock/ from receiver
+        //remove content of tempDock/ from sender
+        //goto and zip volume
+        //move zip to tempDock/
+        //transfer
+        //unpack
+        //goto volume location
+        // unpack zip
+        //mv and overwrite data
     }
 
 }

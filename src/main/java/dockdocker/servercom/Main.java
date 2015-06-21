@@ -23,6 +23,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        //set spark port
+        port(7654);
 
         get("/ssh/:command/:server", (request, response) -> {
             ILoginDataRetriever loginData = new LoginDataRetriever();

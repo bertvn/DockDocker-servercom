@@ -10,5 +10,10 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface IContainerRestore {
+    /**
+     * restore container from containerName.tar
+     * @param containerName name of tar file
+     * @return result "{message: \"success\"}" or "{message: \"failure\"}"
+     */
     String restoreContainer(String containerName);
 }

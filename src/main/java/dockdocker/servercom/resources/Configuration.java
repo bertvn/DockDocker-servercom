@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dockdocker.servercom.interfaces;
+package dockdocker.servercom.resources;
 
 /**
  *
  * @author Bert
  */
-public interface IVolumeBackup {
-    String backupVolume(String containerName);
+public class Configuration {
+    public static final String defaultLoc = "tempDock";
 }

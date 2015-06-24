@@ -25,6 +25,12 @@ public class SSHHandler implements ISSHHandler {
     private final String user;
     private final String host;
 
+    
+    /**
+     * constructor for SSHHandler
+     * @param login username@ip for server
+     * @param password password for server
+     */
     public SSHHandler(String login, String password) {
         user = login.substring(0, login.indexOf('@'));
         host = login.substring(login.indexOf('@') + 1);
@@ -48,7 +54,6 @@ public class SSHHandler implements ISSHHandler {
             session.connect();
 
             Channel channel = session.openChannel("exec");
-            //((ChannelExec) channel).setCommand("echo " + password + " | sudo -S " + command);
 
             System.out.println(command);
             String completeCommand = "sudo -S -p '' " + command;
@@ -57,20 +62,13 @@ public class SSHHandler implements ISSHHandler {
 
             OutputStream out = channel.getOutputStream();
 
-            //((ChannelExec) channel).setPty(true);
             channel.connect();
 
             out.write((password + "\n").getBytes());
             out.flush();
 
-            // X Forwarding
-            // channel.setXForwarding(true);
-            //channel.setInputStream(System.in);
             channel.setInputStream(null);
 
-            //channel.setOutputStream(System.out);
-            //FileOutputStream fos=new FileOutputStream("/tmp/stderr");
-            //((ChannelExec)channel).setErrStream(fos);
             ((ChannelExec) channel).setErrStream(System.err);
 
             InputStream in = channel.getInputStream();
@@ -90,7 +88,6 @@ public class SSHHandler implements ISSHHandler {
                     if (in.available() > 0) {
                         continue;
                     }
-                    //System.out.println("exit-status: " + channel.getExitStatus());
                     break;
                 }
                 try {
@@ -112,25 +109,18 @@ public class SSHHandler implements ISSHHandler {
     }
 
     /**
-     * runs command and allows for another password to be entered. used for SCP
-     *
-     * @param command command you want to run
-     * @param extraPassword password for SCP
-     * @return server output
+     * returns login
+     * @return username@ip
      */
-    public String runCommandExtraPassword(String command, String extraPassword) {
-        String temp = password;
-        password = password + "\n" + extraPassword;
-        String result = runCommand(command);
-        password = temp;
-        return result;
-    }
-
     @Override
     public String getLogin() {
         return user + "@" + host;
     }
 
+    /**
+     * returns password
+     * @return password
+     */
     @Override
     public String getPassword() {
         return password;

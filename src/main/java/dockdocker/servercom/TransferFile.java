@@ -9,6 +9,8 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import dockdocker.servercom.interfaces.ITransferFile;
+import dockdocker.servercom.resources.Configuration;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -16,28 +18,38 @@ import java.io.OutputStream;
  *
  * @author Bert
  */
-public class SCPSSH {
+public class TransferFile implements ITransferFile {
 
     private String password;
     private String password2;
+    private String remote;
     private JSch ssh = new JSch();
 
     private final String user;
     private final String host;
 
-    public SCPSSH(String login, String password) {
+    /**
+     * constructor for TransferFile
+     * @param login username@ip for the server that holds the file
+     * @param password password for the server that holds the file
+     * @param login2 username@ip for the server that the file will be transferred to
+     * @param password2 password for the server that the file will be transferred to
+     */
+    public TransferFile(String login, String password, String login2, String password2) {
         user = login.substring(0, login.indexOf('@'));
         host = login.substring(login.indexOf('@') + 1);
+        remote = login2;
         this.password = password;
+        this.password2 = password2;
     }
 
     /**
-     * run a command on the server through ssh
+     * transfers file over shh
      *
-     * @param command command you want to run
+     * @param file file you want to transfer
      * @return server output
      */
-    public String runCommand(String command) {
+    public String transfer(String file) {
         StringBuilder result = new StringBuilder();
         try {
             Session session = ssh.getSession(user, host, 22);
@@ -47,37 +59,26 @@ public class SCPSSH {
             session.connect();
 
             Channel channel = session.openChannel("exec");
-            //((ChannelExec) channel).setCommand("echo " + password + " | sudo -S " + command);
 
-            System.out.println(command);
-            String completeCommand = command;
+            System.out.println(file);
+            String completeCommand = "tar cz " + Configuration.defaultLoc + "/" + file + " | ssh " + remote + " \"cat > outfile.tar.gz\"";
 
             ((ChannelExec) channel).setCommand(completeCommand);
 
             OutputStream out = channel.getOutputStream();
 
-            //((ChannelExec) channel).setPty(true);
             channel.connect();
 
             out.write((password2 + "\n").getBytes());
             out.flush();
-            //out.write((password2 + "\n").getBytes());
-            //out.flush();
 
-            // X Forwarding
-            // channel.setXForwarding(true);
-            //channel.setInputStream(System.in);
             channel.setInputStream(null);
 
-            //channel.setOutputStream(System.out);
-            //FileOutputStream fos=new FileOutputStream("/tmp/stderr");
-            //((ChannelExec)channel).setErrStream(fos);
             ((ChannelExec) channel).setErrStream(System.err);
 
             InputStream in = channel.getInputStream();
 
             channel.connect();
-            
 
             byte[] tmp = new byte[1024];
             while (true) {
@@ -93,7 +94,6 @@ public class SCPSSH {
                     if (in.available() > 0) {
                         continue;
                     }
-                    //System.out.println("exit-status: " + channel.getExitStatus());
                     break;
                 }
                 try {
@@ -113,25 +113,17 @@ public class SCPSSH {
     }
 
     /**
-     * runs command and allows for another password to be entered. used for SCP
-     *
-     * @param command command you want to run
-     * @param extraPassword password for SCP
-     * @return server output
+     * returns login
+     * @return username@ip
      */
-    public String runCommandExtraPassword(String command, String extraPassword) {
-        //String temp = password;
-        //password = password + "\n" + extraPassword;
-        password2 = extraPassword;
-        String result = runCommand(command);
-        //password = temp;
-        return result;
-    }
-
     public String getLogin() {
         return user + "@" + host;
     }
 
+    /**
+     * returns password
+     * @return password
+     */
     public String getPassword() {
         return password;
     }

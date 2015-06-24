@@ -10,15 +10,27 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface IServer {
-    public ISSHHandler getSSH();
+    /**
+     * returns an SSH handler
+     * @return  SSH handler
+     */
+    ISSHHandler getSSH();
     
-    public ISCPHandler getSCP();
+    /**
+     * returns a file transfer handler
+     * @return file transfer handler
+     */
+    ITransferFile getTF();
     
-    public IContainerBackup getContainerBackup();
+    /**
+     * returns a container backup handler
+     * @return container backup handler
+     */
+    IContainerBackup getContainerBackup();
     
-    public IContainerRestore getContainerRestore();
-    
-    public IVolumeBackup getVolumeBackup();
-    
-    public IVolumeRestore getVolumeRestore();
+    /**
+     * returns a container restore handler
+     * @return container restore handler
+     */
+    IContainerRestore getContainerRestore();
 }

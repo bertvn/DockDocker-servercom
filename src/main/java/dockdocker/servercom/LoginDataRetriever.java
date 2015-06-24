@@ -15,7 +15,7 @@ public class LoginDataRetriever implements ILoginDataRetriever {
 
     /**
      * returns login information for server servername
-     * @param servername
+     * @param servername name of the server
      * @return new String[]{"user","ip","password"}
      * @throws Exception servername is not found
      */

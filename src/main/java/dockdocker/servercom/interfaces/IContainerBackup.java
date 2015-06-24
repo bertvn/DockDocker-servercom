@@ -10,5 +10,10 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface IContainerBackup {
+    /**
+     * backups container
+     * @param containerName container to be backupped
+     * @return result "{message: \"success\"}" or "{message: \"failure\"}"
+     */
     String backupContainer(String containerName);
 }

@@ -5,84 +5,83 @@
  */
 package dockdocker.servercom;
 
-
 import dockdocker.servercom.interfaces.*;
 
 /**
  *
  * @author Bert
  */
-public class Server implements IServer{
+public class Server implements IServer {
+
     private ISSHHandler ssh;
-    private ISCPHandler scp;
+    private ITransferFile tf;
     private IContainerBackup cb;
     private IContainerRestore cr;
-    private IVolumeBackup vb;
-    private IVolumeRestore vr;
-    
-    public Server(ISSHHandler ssh){
+
+    /**
+     * constructor for server
+     * @param ssh ssh handler
+     */
+    public Server(ISSHHandler ssh) {
         this.ssh = ssh;
     }
-    
-    public Server(ISSHHandler ssh, ISCPHandler scp, IContainerBackup cb, IVolumeBackup vb){
+
+    /**
+     * constructor for server
+     * @param ssh ssh handler
+     * @param tf transfer file handler
+     * @param cb container backup handler
+     */
+    public Server(ISSHHandler ssh, ITransferFile tf, IContainerBackup cb) {
         this.ssh = ssh;
-        this.scp = scp;
+        this.tf = tf;
         this.cb = cb;
-        this.vb = vb;
     }
-    
-    public Server(ISSHHandler ssh, IContainerRestore cr, IVolumeRestore vr){
+
+    /**
+     * constructor for server
+     * @param ssh ssh handler
+     * @param cr container restore handler
+     */
+    public Server(ISSHHandler ssh, IContainerRestore cr) {
         this.ssh = ssh;
         this.cr = cr;
-        this.vr = vr;
     }
-    
+
     /**
      * returns ssh handler
+     *
      * @return ssh handler
      */
-    public ISSHHandler getSSH(){
+    public ISSHHandler getSSH() {
         return ssh;
     }
-    
+
     /**
-     * returns scp handler
-     * @return scp handler
+     * returns transfer file handler
+     *
+     * @return transfer file handler
      */
-    public ISCPHandler getSCP(){
-        return scp;
+    public ITransferFile getTF() {
+        return tf;
     }
-    
+
     /**
      * returns container backup class
+     *
      * @return container backup
      */
-    public IContainerBackup getContainerBackup(){
+    public IContainerBackup getContainerBackup() {
         return cb;
     }
-    
+
     /**
      * returns container restore class
+     *
      * @return container restore
      */
-    public IContainerRestore getContainerRestore(){
+    public IContainerRestore getContainerRestore() {
         return cr;
     }
-    
-    /**
-     * returns volume backup class
-     * @return volume backup
-     */
-    public IVolumeBackup getVolumeBackup(){
-        return vb;
-    }
-    
-    /**
-     * returns volume restore class
-     * @return volume restore
-     */
-    public IVolumeRestore getVolumeRestore(){
-        return vr;
-    }
-    
+
 }

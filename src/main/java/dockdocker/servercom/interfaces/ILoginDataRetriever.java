@@ -10,5 +10,11 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface ILoginDataRetriever {
-    public String[] getServerLogin(String servername) throws Exception;
+    /**
+     * returns login information for server servername
+     * @param servername name of the server
+     * @return String array containing {"username","ip","password"}
+     * @throws Exception throws exception if server can't be found
+     */
+    String[] getServerLogin(String servername) throws Exception;
 }

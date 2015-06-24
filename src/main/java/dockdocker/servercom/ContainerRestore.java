@@ -7,6 +7,7 @@ package dockdocker.servercom;
 
 import dockdocker.servercom.interfaces.IContainerRestore;
 import dockdocker.servercom.interfaces.ISSHHandler;
+import dockdocker.servercom.resources.Configuration;
 
 /**
  *
@@ -15,8 +16,11 @@ import dockdocker.servercom.interfaces.ISSHHandler;
 public class ContainerRestore implements IContainerRestore {
 
     private ISSHHandler han;
-    private String defaultLoc = "tempDock";
 
+    /**
+     * constructor for ContainerRestore
+     * @param han ssh handler
+     */
     public ContainerRestore(ISSHHandler han) {
         this.han = han;
     }
@@ -34,10 +38,10 @@ public class ContainerRestore implements IContainerRestore {
         //regex NAMES\n([0-9A-Za-z]*) $1
         String oldID = begin.replaceAll(".*NAMES\n([0-9A-Za-z]*) .*", "$1");
         
-        han.runCommand("rm -f " + defaultLoc + "/*");
+        han.runCommand("rm -f " + Configuration.defaultLoc + "/*");
         han.runCommand("tar xzf outfile.tar.gz");
         
-        han.runCommand("docker load < " + defaultLoc + "/" + containerName + ".tar");
+        han.runCommand("docker load < " + Configuration.defaultLoc + "/" + containerName + ".tar");
         han.runCommand("docker run " + containerName);
         
         String status = han.runCommand("docker ps -l"); 

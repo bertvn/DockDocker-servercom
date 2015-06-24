@@ -14,9 +14,14 @@ import dockdocker.servercom.interfaces.IServer;
  */
 public class MoveContainer implements IMoveContainer {
 
-    private IServer sender;
-    private IServer receiver;
+    private final IServer sender;
+    private final IServer receiver;
 
+    /**
+     * constructor for movecontainer
+     * @param server1 server where the container runs
+     * @param server2 server where the container will be copied to
+     */
     public MoveContainer(IServer server1, IServer server2) {
         this.sender = server1;
         this.receiver = server2;
@@ -28,48 +33,22 @@ public class MoveContainer implements IMoveContainer {
      * @param container name of container
      * @return String indicating where it went wrong
      */
+    @Override
     public String transferContainer(String container) {
-        boolean hasVolume = true;
-        String volume = sender.getSSH().runCommand("docker inspect -f {{.Config.Volumes}} " + container);
-        System.out.println(volume);
-        if (volume.equals("<no value>")) {
-            hasVolume = false;
-        }
-        System.out.println("has volume:" + hasVolume);
+        
         String backup = sender.getContainerBackup().backupContainer(container);
         //if backup !== failure
         System.out.println("backup: ");
         System.out.println(backup);
         
-        String scp = sender.getSCP().transferFile(container + ".tar", receiver.getSSH().getLogin(), receiver.getSSH().getPassword());
+        String scp = sender.getTF().transfer(container + ".tar");
         //if scp !== failure
         System.out.println("scp: ");
         System.out.println(scp);
         
-        
         String restore = receiver.getContainerRestore().restoreContainer(container);
-        //if restore !== failure
-        //System.out.println(scp);
-        
-        if (hasVolume == false) {
-            return restore;
-        }
 
-        transferVolume(container, restore);
         return restore;
-    }
-
-    private void transferVolume(String container, String newContainer) {
-        //remove output.tar.gz from receiver
-        //remove content of tempDock/ from receiver
-        //remove content of tempDock/ from sender
-        //goto and zip volume
-        //move zip to tempDock/
-        //transfer
-        //unpack
-        //goto volume location
-        // unpack zip
-        //mv and overwrite data
     }
 
 }

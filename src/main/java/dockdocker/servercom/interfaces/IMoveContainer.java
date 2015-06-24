@@ -10,5 +10,10 @@ package dockdocker.servercom.interfaces;
  * @author Bert
  */
 public interface IMoveContainer {
-    public String transferContainer(String container);
+    /**
+     * container that needs to be moved between servers
+     * @param container name of the container
+     * @return result "{message: \"success\"}" or "{message: \"failure\"}"
+     */
+    String transferContainer(String container);
 }

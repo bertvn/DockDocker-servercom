@@ -24,7 +24,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         //set spark port
-        port(7654);
+        port(4610);
 
         get("/ssh/:command/:server", (request, response) -> {
             ILoginDataRetriever loginData = new LoginDataRetriever();
@@ -58,13 +58,14 @@ public class Main {
         get("/move/:name/:server1/:server2", (request, response) -> {
             ILoginDataRetriever loginData = new LoginDataRetriever();
             try {
-                String[] login = loginData.getServerLogin(request.params(":server1"));
-                ISSHHandler han1 = new SSHHandler(login[0] + "@" + login[1], login[2]);
-                SCPSSH scpssh = new SCPSSH(login[0] + "@" + login[1], login[2]);
-                login = loginData.getServerLogin(request.params(":server2"));
-                ISSHHandler han2 = new SSHHandler(login[0] + "@" + login[1], login[2]);
-                IServer server1 = new Server(han1, new SCPHandler(scpssh), new ContainerBackup(han1), new VolumeBackup(han1));
-                IServer server2 = new Server(han2, new ContainerRestore(han2), new VolumeRestore(han2));
+                String[] login1 = loginData.getServerLogin(request.params(":server1"));
+                String[] login2 = loginData.getServerLogin(request.params(":server2"));
+                ISSHHandler han1 = new SSHHandler(login1[0] + "@" + login1[1], login1[2]);
+                TransferFile tf = new TransferFile(login1[0] + "@" + login1[1], login1[2], login2[0] + "@" + login2[1], login2[2]);
+
+                ISSHHandler han2 = new SSHHandler(login1[0] + "@" + login1[1], login1[2]);
+                IServer server1 = new Server(han1, tf, new ContainerBackup(han1));
+                IServer server2 = new Server(han2, new ContainerRestore(han2));
                 IMoveContainer mover = new MoveContainer(server1, server2);
                 String result = mover.transferContainer(request.params(":name"));
                 return result;

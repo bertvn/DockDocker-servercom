@@ -9,14 +9,15 @@ package dockdocker.servercom.interfaces;
  *
  * @author Bert
  */
-public interface ISSHHandler {
+public interface ITransferFile {
+
     /**
-     * runs command on server
-     * @param command command that needs to be run
-     * @return result of command
+     * transfers file between servers
+     * @param file filename
+     * @return result
      */
-    String runCommand(String command);
-    
+    String transfer(String file);
+
     /**
      * returns username@ip for the server
      * @return login information
@@ -27,4 +28,5 @@ public interface ISSHHandler {
      * @return password
      */
     String getPassword();
+
 }
